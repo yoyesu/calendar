@@ -11,7 +11,11 @@
   
   <main id="container">
     <header id='header'>
-      
+      <div id="month-display"></div>
+      <div>
+        <button id='back-btn'>Back</button>
+        <button id='next-btn'>Next</button>
+      </div>
     </header>
     <div id="weekdays">
       <div>Monday</div>
@@ -26,6 +30,17 @@
 
     </div>
   </main>
+
+  <div id="new-event">
+    <h2>New Event</h2>
+
+    <input type="text" id="event-title-input" placeholder='Event title'>
+
+    <button id="save-btn">Save</button>
+    <button id="cancel-btn">Cancel</button>
+  </div>
+
+  <div id="event-popup"></div>
   <script src="./app.js"></script>
 </body>
 </html>

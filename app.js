@@ -7,6 +7,11 @@ const weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Satur
 
 function loadCalendar(){
   const date = new Date();
+
+  if (nav !== 0) {
+    date.setMonth(new Date().getMonth() + nav);
+  }
+
   const day = date.getDate();
   const month = date.getMonth(); //this gives you the months with index order, that is Jan is 0, Feb is 1, etc.
   const year = date.getFullYear();
@@ -21,6 +26,12 @@ function loadCalendar(){
   }); //since firstDayOfMonth is an object we need to convert to string
 
   const paddingDays = weekdays.indexOf(dateString.split(',')[0]); //this will give you the number of days before the current day. So if it's wednesday, paddingDays = 2 (Monday + Tuesday)
+
+  const monthYearTitle = document.querySelector('#month-display').innerText = 
+  `${date.toLocaleDateString('en-GB', {month: 'long',})} ${year}`;
+
+
+  calendar.innerHTML = ''; //this is so that every time you call the loadCalendar function with the back/nest btns, the calendar empties. So when you load the page, the calendar will be created with the nav 0. If you click one of the next/back btns you need to remove the month that was displayed and before creating the new one (for loop will create it)
 
   for(let i = 1; i <= paddingDays + daysInMonth; i++) {
     const daySquare = document.createElement('div');
@@ -43,4 +54,18 @@ function loadCalendar(){
   console.log('current date in string format' + dateString);
 }
 
+function changeMonthBtns(){
+  document.querySelector('#next-btn').addEventListener('click', () => {
+    nav++;
+    loadCalendar();
+  });
+  
+  document.querySelector('#back-btn').addEventListener('click', () => {
+    nav--;
+    loadCalendar();
+  });
+  
+}
+
+changeMonthBtns();
 loadCalendar();
