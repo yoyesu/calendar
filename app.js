@@ -3,7 +3,24 @@ let clicked = null; //day the user clicks on
 let events = localStorage.getItem('events') ? JSON.parse(localStorage.getItem('events')) : []; // we're saving events in LS, but we want to save objects and LS doesn't accept objects that's why we need to convert to json. The condition is to make sure the event is stored in LS before trying to convert to json and getting an error if the event is not stored in LS
 
 const calendar = document.querySelector('#calendar');
+const newEvent = document.querySelector('#new-event');
+const eventPopUp = document.querySelector('#event-popup');
+const eventTitleInput = document.querySelector('#event-title-input');
 const weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+function openEventScreen(date){
+  clicked = date;
+
+  const eventForDay = events.find(e => e.date == clicked);
+
+  if(eventForDay){
+    console.log('event already exists');
+  } else {
+    newEvent.style.display = 'block';
+  }
+
+  eventPopUp.style.display = 'block';
+}
 
 function loadCalendar(){
   const date = new Date();
@@ -40,18 +57,24 @@ function loadCalendar(){
     if (i > paddingDays){
       daySquare.innerText = i - paddingDays;
 
-      daySquare.addEventListener('click', ()=> console.log('click'))
+      daySquare.addEventListener('click', ()=> openEventScreen(`${i - paddingDays}/${month +1}/${year}`))
     } else {
       daySquare.classList.add('padding');
     }
 
     calendar.appendChild(daySquare);
   }
+}
 
-  console.log('padding days' +' '+ paddingDays);
-  console.log('current date' + `${day} ${month} ${year}`);
-  console.log('numbers of days in current month' + daysInMonth);
-  console.log('current date in string format' + dateString);
+function closePopUp(){
+  newEvent.style.display = 'none';
+  eventPopUp.style.display = 'none';
+  eventTitleInput.value = '';
+  clicked = null;
+}
+
+function saveEvent(){
+  
 }
 
 function changeMonthBtns(){
@@ -67,5 +90,13 @@ function changeMonthBtns(){
   
 }
 
+function popUpBtns(){
+  document.querySelector('#save-btn').addEventListener('click', saveEvent);
+
+  document.querySelector('#cancel-btn').addEventListener('click',
+    closePopUp);
+}
+
+popUpBtns();
 changeMonthBtns();
 loadCalendar();
