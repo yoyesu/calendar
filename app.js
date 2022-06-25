@@ -127,6 +127,11 @@ function changeMonthBtns(){
     nav--;
     loadCalendar();
   });
+
+  document.querySelector('#today-btn').addEventListener('click', () => {
+    nav = 0;
+    loadCalendar();
+  });
   
 }
 

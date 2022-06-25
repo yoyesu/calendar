@@ -15,6 +15,10 @@ button {
   color: white;
 }
 
+#today-btn {
+  background-color: #d36c6c !important;
+}
+
 #header {
   padding: 10px;
   color: #d36c6c;
