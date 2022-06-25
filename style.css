@@ -79,7 +79,7 @@ button {
   background-color: #FFFCFF !important;
   box-shadow: none !important;
 }
-#new-event, #delete-event {
+#new-event, #delete-event-popup {
   display: none;
   z-index: 20;
   padding: 25px;

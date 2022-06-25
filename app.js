@@ -4,6 +4,7 @@ let events = localStorage.getItem('events') ? JSON.parse(localStorage.getItem('e
 
 const calendar = document.querySelector('#calendar');
 const newEvent = document.querySelector('#new-event');
+const deleteEventPopUp = document.querySelector('#delete-event-popup');
 const eventPopUp = document.querySelector('#event-popup');
 const eventTitleInput = document.querySelector('#event-title-input');
 const weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
@@ -11,10 +12,11 @@ const weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Satur
 function openEventScreen(date){
   clicked = date;
 
-  const eventForDay = events.find(e => e.date == clicked);
+  const eventForDay = events.find(e => e.date === clicked);
 
   if(eventForDay){
-    console.log('event already exists');
+    document.querySelector('#event-text').innerText = eventForDay.title; 
+    deleteEventPopUp.style.display = 'block';
   } else {
     newEvent.style.display = 'block';
   }
@@ -54,10 +56,24 @@ function loadCalendar(){
     const daySquare = document.createElement('div');
     daySquare.classList.add('day');
 
+    const dayString = `${i - paddingDays}/${month +1}/${year}`;
+    
     if (i > paddingDays){
       daySquare.innerText = i - paddingDays;
+      
+      const eventForDay = events.find(e => e.date === dayString);
+      if (i - paddingDays === day && nav === 0){
+        daySquare.id = 'current-day';
+      }
 
-      daySquare.addEventListener('click', ()=> openEventScreen(`${i - paddingDays}/${month +1}/${year}`))
+      if (eventForDay) {
+        const eventDiv = document.createElement('div');
+        eventDiv.classList.add('event');
+        eventDiv.innerText = eventForDay.title;
+        daySquare.appendChild(eventDiv);
+      }
+
+      daySquare.addEventListener('click', ()=> openEventScreen(dayString))
     } else {
       daySquare.classList.add('padding');
     }
@@ -67,14 +83,38 @@ function loadCalendar(){
 }
 
 function closePopUp(){
+  eventTitleInput.classList.remove('error');
   newEvent.style.display = 'none';
+  deleteEventPopUp.style.display = 'none';
   eventPopUp.style.display = 'none';
   eventTitleInput.value = '';
   clicked = null;
 }
 
 function saveEvent(){
-  
+  if (eventTitleInput.value){
+    eventTitleInput.classList.remove('error');
+
+    events.push({
+      date: clicked,
+      title: eventTitleInput.value,
+    });
+
+    localStorage.setItem('events', JSON.stringify(events));
+
+    closePopUp();
+  } else {
+    eventTitleInput.classList.add('error');
+  }
+
+  loadCalendar();
+}
+
+function deleteEvent(){
+  events = events.filter(e => e.date !== clicked);
+  localStorage.setItem('events', JSON.stringify(events));
+  closePopUp();
+  loadCalendar();
 }
 
 function changeMonthBtns(){
@@ -94,6 +134,11 @@ function popUpBtns(){
   document.querySelector('#save-btn').addEventListener('click', saveEvent);
 
   document.querySelector('#cancel-btn').addEventListener('click',
+    closePopUp);
+
+  document.querySelector('#delete-btn').addEventListener('click', deleteEvent);
+
+  document.querySelector('#close-btn').addEventListener('click',
     closePopUp);
 }
 
